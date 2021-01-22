@@ -16,6 +16,12 @@
 function createNode(type, creationParams, userSettings) {
     var node = new AudioNode(type, creationParams, userSettings || {});
     saveNode(node);
+    // __.onCreateNode is a callback which can be defined externally to set classes on new nodes
+    if (__.isFun(__.onCreateNode)) {
+        __.onCreateNode(node, type, creationParams, userSettings);
+        // ensure custom selectors get pushed to nodeLookup
+        setNodeLookup(node);
+    }
     //bail if we're only creating a macro wrapper
     if (node.isMacro()) {
         return node;

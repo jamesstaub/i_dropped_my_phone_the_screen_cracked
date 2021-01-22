@@ -50,9 +50,9 @@ function setNodeLookup(node) {
                 setter(_nodeLookup, (prefix + "#" + params[x]), node.getUUID());
             } else if (x === "class") {
                 var classArr = params[x].split(",");
-                classArr.forEach(function () {
-                    selector_array.push((prefix + "." + params[x]));
-                    setter(_nodeLookup, (prefix + "." + params[x]), node.getUUID());
+                classArr.forEach(function (className) {
+                    selector_array.push((prefix + "." + className));
+                    setter(_nodeLookup, (prefix + "." + className), node.getUUID());
                 });
             }
         }
