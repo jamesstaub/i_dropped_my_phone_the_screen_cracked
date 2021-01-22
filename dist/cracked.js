@@ -325,6 +325,12 @@ cracked.find = function () {
 function createNode(type, creationParams, userSettings) {
     var node = new AudioNode(type, creationParams, userSettings || {});
     saveNode(node);
+    // __.onCreateNode is a callback which can be defined externally to set classes on new nodes
+    if (__.isFun(__.onCreateNode)) {
+        __.onCreateNode(node, type, creationParams, userSettings);
+        // ensure custom selectors get pushed to nodeLookup
+        setNodeLookup(node);
+    }
     //bail if we're only creating a macro wrapper
     if (node.isMacro()) {
         return node;
@@ -2033,9 +2039,9 @@ function setNodeLookup(node) {
                 setter(_nodeLookup, (prefix + "#" + params[x]), node.getUUID());
             } else if (x === "class") {
                 var classArr = params[x].split(",");
-                classArr.forEach(function () {
-                    selector_array.push((prefix + "." + params[x]));
-                    setter(_nodeLookup, (prefix + "." + params[x]), node.getUUID());
+                classArr.forEach(function (className) {
+                    selector_array.push((prefix + "." + className));
+                    setter(_nodeLookup, (prefix + "." + className), node.getUUID());
                 });
             }
         }
@@ -2839,6 +2845,20 @@ cracked._dumpState = function () {
  */
 cracked._getNode = function (uuid) {
     return (getNodeWithUUID(uuid));
+};
+
+/**
+ * debug method to get all nodes
+ * works in debug only
+ * @category Debug
+ * @returns {*}
+ * @public
+ * @function
+ * @memberof cracked
+ * @name cracked#_getNodeLookup
+ */
+cracked._getNodeLookup = function () {
+    return _nodeLookup;
 };
 
 /**

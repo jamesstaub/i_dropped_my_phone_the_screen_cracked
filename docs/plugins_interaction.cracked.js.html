@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>plugins/oscillators.cracked.js - Documentation</title>
+    <title>plugins/interaction.cracked.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">plugins/oscillators.cracked.js</h1>
+    <h1 class="page-title">plugins/interaction.cracked.js</h1>
     
 
     
@@ -38,127 +38,44 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>//need a custom wave osc
-
-/**
- * Sine Wave Oscillator
- *
- * [See more oscillator examples](examples/oscillators.html)
- *
+            <pre class="prettyprint source linenums"><code>/**
+ * Passes mouse move events to a callback. Tracks the movement of the mouse.
+ * web audio
  * @plugin
- * @category Oscillator
+ * @category Interaction
  * @function
  * @memberof cracked
- * @name cracked#sine
+ * @name cracked#mouse_movement
  * @public
- * @param {Object} [params] map of optional values
- * @param {Number} [params.frequency=440]
- * @param {Number} [params.detune=0]
- * @param {String} [params.type=sine]
  */
-cracked.sine = function (params) {
-
-    var freq = __.isNum(params) ? params : 440;
-    var userParams = __.isObj(params) ? params : {};
-    var options = {};
-    options.type = userParams.type || "sine";
-    options.frequency = userParams.frequency || freq;
-    options.detune = userParams.detune || 0;
-    options.mapping = userParams.mapping || {};
-
-    __.begin("sine", userParams).osc(options).end("sine");
-
-    return cracked;
+cracked.mouse_movement = function(callback) {
+    function moveHandler(e) {
+        if(callback) {
+            callback(e);
+        }
+    }
+    window.parent.document.removeEventListener("mousemove", moveHandler, false);
+    window.parent.document.addEventListener("mousemove", moveHandler, false);
 };
+
 /**
- * Square Wave Oscillator
- *
- * [See more oscillator examples](examples/oscillators.html)
- *
+ * Passes key press events to a callback. Tracks keyboard activity.
+ * web audio
  * @plugin
- * @category Oscillator
+ * @category Interaction
  * @function
  * @memberof cracked
- * @name cracked#square
+ * @name cracked#key_press
  * @public
- * @param {Object} [params] map of optional values
- * @param {Number} [params.frequency=440]
- * @param {Number} [params.detune=0]
- * @param {String} [params.type=sine]
  */
-cracked.square = function (params) {
-
-    var freq = __.isNum(params) ? params : 440;
-    var userParams = __.isObj(params) ? params : {};
-    var options = {};
-    options.type = userParams.type || "square";
-    options.frequency = userParams.frequency || freq;
-    options.detune = userParams.detune || 0;
-    options.mapping = userParams.mapping || {};
-
-    __.begin("square", userParams).osc(options).end("square");
-
-    return cracked;
-};
-/**
- * Sawtooth Wave Oscillator
- *
- * [See more oscillator examples](examples/oscillators.html)
- *
- * @plugin
- * @category Oscillator
- * @function
- * @memberof cracked
- * @name cracked#saw
- * @public
- * @param {Object} [params] map of optional values
- * @param {Number} [params.frequency=440]
- * @param {Number} [params.detune=0]
- * @param {String} [params.type=sine]
- */
-cracked.saw = function (params) {
-
-    var freq = __.isNum(params) ? params : 440;
-    var userParams = __.isObj(params) ? params : {};
-    var options = {};
-    options.type = userParams.type || "sawtooth";
-    options.frequency = userParams.frequency || freq;
-    options.detune = userParams.detune || 0;
-    options.mapping = userParams.mapping || {};
-
-    __.begin("saw", userParams).osc(options).end("saw");
-
-    return cracked;
-};
-/**
- * Triangle Wave Oscillator
- *
- * [See more oscillator examples](examples/oscillators.html)
- *
- * @plugin
- * @category Oscillator
- * @function
- * @memberof cracked
- * @name cracked#triangle
- * @public
- * @param {Object} [params] map of optional values
- * @param {Number} [params.frequency=440]
- * @param {Number} [params.detune=0]
- * @param {String} [params.type=sine]
- */
-cracked.triangle = function (params) {
-
-    var freq = __.isNum(params) ? params : 440;
-    var userParams = __.isObj(params) ? params : {};
-    var options = {};
-    options.type = userParams.type || "triangle";
-    options.frequency = userParams.frequency || freq;
-    options.detune = userParams.detune || 0;
-    options.mapping = userParams.mapping || {};
-
-    __.begin("triangle", userParams).osc(options).end("triangle");
-
-    return cracked;
+cracked.key_press = function(callback) {
+    function keyPressHandler(e) {
+        if(callback) {
+            callback(e);
+        }
+    }
+    window.parent.document.removeEventListener("keypress", keyPressHandler, false);
+    window.parent.document.addEventListener("keypress", keyPressHandler, false);
 };</code></pre>
         </article>
     </section>
