@@ -328,8 +328,6 @@ function createNode(type, creationParams, userSettings) {
     // __.onCreateNode is a callback which can be defined externally to set classes on new nodes
     if (__.isFun(__.onCreateNode)) {
         __.onCreateNode(node, type, creationParams, userSettings);
-        // ensure custom selectors get pushed to nodeLookup
-        setNodeLookup(node);
     }
     //bail if we're only creating a macro wrapper
     if (node.isMacro()) {
@@ -2046,6 +2044,10 @@ function setNodeLookup(node) {
             }
         }
     }
+    // Fixme
+    // setter() pushes to array,
+    // and this gets called for a second time as a result of onCreateNode
+    // need a way to avoid double pushing, even though we need the initial push before onCreateNode
     selector_array.push("*");
     setter(_nodeLookup, "*", node.getUUID()); //everything
     selector_array.push((prefix + node.getType()));
@@ -3244,6 +3246,8 @@ cracked.shuffle = function (arr) {
  * @param {Number} max
  */
 cracked.random = function (min, max) {
+    // TODO implement isFloat() 
+    // and dont use Math.round if inputs are float
     return Math.round(min + Math.random() * (max - min));
 };
 

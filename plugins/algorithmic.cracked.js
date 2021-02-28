@@ -249,6 +249,8 @@ cracked.shuffle = function (arr) {
  * @param {Number} max
  */
 cracked.random = function (min, max) {
+    // TODO implement isFloat() 
+    // and dont use Math.round if inputs are float
     return Math.round(min + Math.random() * (max - min));
 };
 
