@@ -325,6 +325,10 @@ cracked.find = function () {
 function createNode(type, creationParams, userSettings) {
     var node = new AudioNode(type, creationParams, userSettings || {});
     saveNode(node);
+    // __.onCreateNode is a callback which can be defined externally to set classes on new nodes
+    if (__.isFun(__.onCreateNode)) {
+        __.onCreateNode(node, type, creationParams, userSettings);
+    }
     //bail if we're only creating a macro wrapper
     if (node.isMacro()) {
         return node;
@@ -2033,13 +2037,17 @@ function setNodeLookup(node) {
                 setter(_nodeLookup, (prefix + "#" + params[x]), node.getUUID());
             } else if (x === "class") {
                 var classArr = params[x].split(",");
-                classArr.forEach(function () {
-                    selector_array.push((prefix + "." + params[x]));
-                    setter(_nodeLookup, (prefix + "." + params[x]), node.getUUID());
+                classArr.forEach(function (className) {
+                    selector_array.push((prefix + "." + className));
+                    setter(_nodeLookup, (prefix + "." + className), node.getUUID());
                 });
             }
         }
     }
+    // Fixme
+    // setter() pushes to array,
+    // and this gets called for a second time as a result of onCreateNode
+    // need a way to avoid double pushing, even though we need the initial push before onCreateNode
     selector_array.push("*");
     setter(_nodeLookup, "*", node.getUUID()); //everything
     selector_array.push((prefix + node.getType()));
@@ -2842,6 +2850,23 @@ cracked._getNode = function (uuid) {
 };
 
 /**
+ * debug method to get all nodes
+ * @category Debug
+ * @returns {*}
+ * @public
+ * @function
+ * @memberof cracked
+ * @name cracked#_getNodeLookup
+ */
+cracked._getNodeLookup = function () {
+    return _nodeLookup;
+};
+
+cracked._setNodeLookup = function (key, value) {
+    _nodeLookup[key] = value;
+};
+
+/**
  * log connections
  * @param nodeToConnect
  * @param node
@@ -3224,6 +3249,8 @@ cracked.shuffle = function (arr) {
  * @param {Number} max
  */
 cracked.random = function (min, max) {
+    // TODO implement isFloat() 
+    // and dont use Math.round if inputs are float
     return Math.round(min + Math.random() * (max - min));
 };
 

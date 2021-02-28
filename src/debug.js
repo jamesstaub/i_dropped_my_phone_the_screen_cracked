@@ -118,7 +118,6 @@ cracked._getNode = function (uuid) {
 
 /**
  * debug method to get all nodes
- * works in debug only
  * @category Debug
  * @returns {*}
  * @public
@@ -128,6 +127,10 @@ cracked._getNode = function (uuid) {
  */
 cracked._getNodeLookup = function () {
     return _nodeLookup;
+};
+
+cracked._setNodeLookup = function (key, value) {
+    _nodeLookup[key] = value;
 };
 
 /**
